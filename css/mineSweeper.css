@@ -1,3 +1,7 @@
+body {
+    background-color: black;
+}
+
 .cell {
     height: 20px;
     width: 20px;
@@ -26,7 +30,28 @@
 
 }
 
-.mine {}
+.smiley {
+    font-size: 30px;
+    width: 55px;
+    height: 50px;
+    background-color: rgb(171, 102, 12);
+    text-align: center;
+}
+
+.timer {
+    border: black solid 1px;
+    margin-inline: 430px;
+    margin-block: 10px;
+    padding: 20px;
+    font-size: 40px;
+}
+
+button {
+    width: 80px;
+    height: 30px;
+    background-color: rgb(171, 102, 12);
+
+}
 
 
 
