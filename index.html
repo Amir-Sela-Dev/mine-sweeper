@@ -1,0 +1,35 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mine Sweeper</title>
+    <link rel="stylesheet" href="css/mineSweeper.css">
+</head>
+
+<body onload="onInit()" background="background-image.jpg">
+
+    <table align="center" border="1" cellpadding="5">
+        <tbody class="board">
+            <div class="modify">
+                <h1>Mine Sweeper</h1>
+                <div>timer: <span class="min">00</span>:<span class="sec">00</span></div>
+
+                <button onclick="chooseDifficult(4, 2)">Eazy</button>
+                <button onclick="chooseDifficult(8, 14)">Hard</button>
+                <button onclick="chooseDifficult(12, 32)">Extreme!</button>
+
+            </div>
+
+
+
+
+        </tbody>
+    </table>
+
+    <script src="js/util.js"></script>
+    <script src="js/mineSweeper.js"></script>
+</body>
+
+</html>
