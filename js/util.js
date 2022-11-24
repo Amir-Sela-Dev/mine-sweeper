@@ -15,6 +15,7 @@ function getBoardLocations() {
     var BoardLocation = { i: null, j: null }
     for (var i = 0; i < gLevel.SIZE; i++) {
         for (var j = 0; j < gLevel.SIZE; j++) {
+            if (gBoard[i][j].isShown) continue
             BoardLocation = { i: i, j: j }
             BoardLocations.push(BoardLocation)
         }

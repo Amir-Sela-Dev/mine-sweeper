@@ -3,13 +3,21 @@ body {
 }
 
 .cell {
-    height: 20px;
-    width: 20px;
-    padding: 20px;
+    /* height: 4px;
+    width: 4px; */
+    text-align: center;
+    font-size: 10x;
+    padding-inline: 15px;
+    padding-block: 5px;
+
+    max-inline-size: 7px;
+    max-block-size: 7px;
+    min-block-size: 7px;
+    max-block-size: 7px;
     overflow: hidden;
     text-overflow: ellipsis;
     background-color: gray;
-    color: gray;
+    color: rgb(27, 20, 20);
 }
 
 .board {
@@ -39,21 +47,46 @@ body {
 }
 
 .timer {
-    border: black solid 1px;
-    margin-inline: 430px;
-    margin-block: 10px;
-    padding: 20px;
+    /* border: black solid 1px; */
+    padding: 5px;
     font-size: 40px;
+
 }
 
 button {
     width: 80px;
     height: 30px;
     background-color: rgb(171, 102, 12);
+    margin-top: 1px;
+    cursor: grab;
+}
 
+button:hover {
+    background-color: antiquewhite;
+}
+
+.lives {
+    margin-inline: 113px;
+    font-size: 25px;
+    margin-bottom: 10px;
+    margin-top: 1px;
 }
 
 
+.hint {
+    margin-inline-end: 350px;
+    background-color: rgb(112, 80, 80);
+    font-size: 15px;
+}
+
+.hint:hover {
+    background-color: antiquewhite;
+
+}
+
+.negshint {
+    background-color: antiquewhite;
+}
 
 
 .shown {
