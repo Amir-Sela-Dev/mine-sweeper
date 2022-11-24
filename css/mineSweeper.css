@@ -144,3 +144,9 @@ button:hover {
 .manuallymines {
     border: red solid 2px;
 }
+
+footer {
+    text-align: center;
+    font-size: 30px;
+    margin-top: 80px;
+}
