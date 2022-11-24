@@ -10,16 +10,19 @@
 
 <body onload="onInit()" background="background-image.jpg">
 
+
     <table align="center" border="1">
         <tbody class="board">
             <div class="modify">
                 <h1>Mine Sweeper</h1>
                 <button class="smiley" onclick="restart()"> 😀 </button>
                 <div class="timer"><span class="min">00</span>:<span class="sec">00</span></div>
+                <button class="safe" onclick="safeClick()"> safe click: 3</button>
                 <button class="hint" onclick="giveHint(this)"> 💡 💡 💡</button>
+                <button class="minepos" onclick="manuallyPosMines(this)"> set mines </button>
                 <div class="lives">💖💖💖</div>
 
-                <button onclick="chooseDifficult(4, 2)">Easy</button>
+                <button onclick="chooseDifficult(4, 3)">Easy</button>
                 <button onclick="chooseDifficult(8, 14)">Hard</button>
                 <button onclick="chooseDifficult(12, 32)">Extreme!</button>
 
