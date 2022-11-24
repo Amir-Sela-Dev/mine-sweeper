@@ -14,14 +14,15 @@ var gGame = {
     shownCount: 0,
     markedCount: 0,
     markedMineCounter: 0,
-    lives: 3
+    lives: 3,
+    numOfHints: 3,
+    isfirstClick: true,
+    isHint: false
 }
 
 
 var gBoard
 var gInterval
-var isfirstClick = true
-var isHint = false
 
 
 
@@ -124,17 +125,21 @@ function setMinesNegsCount(cellI, cellJ, mat) {
 function cellClicked(elCell, i, j) {
     var clickedCell = gBoard[i][j]
     if (!gGame.isOn) return
-    if (isHint) {
-
+    if (gGame.isHint) {
+        showNegs(i, j, gBoard)
+        setTimeout(() => {
+            reversHint(i, j, gBoard);
+        }, 1000)
+        return
     }
     if (clickedCell.isMine && !clickedCell.isMarked) mineStep(elCell)
-    if (clickedCell.isMarked || clickedCell.isShown && !isfirstClick) return
+    if (clickedCell.isMarked || clickedCell.isShown && !gGame.isfirstClick) return
     if (clickedCell.minesAroundCount === 0 && !clickedCell.isMine) {
         expandShown(i, j, gBoard)
     }
     elCell.classList.add('shown')
     clickedCell.isShown = true
-    if (isfirstClick) firstClick()
+    if (gGame.isfirstClick) firstClick()
     gGame.shownCount++
     checkGameOver()
 
@@ -146,7 +151,7 @@ function firstClick() {
     setCountOfNegsMines(gBoard)
     renderBoard(gBoard)
     gInterval = setInterval(timer, 1000)
-    isfirstClick = false
+    gGame.isfirstClick = false
 }
 
 function expandShown(cellI, cellJ, mat) {
@@ -282,7 +287,7 @@ function restart() {
     gGame.isOn = true
     gGame.markedMineCounter = 0
     gGame.shownCount = 0
-    isfirstClick = true
+    gGame.isfirstClick = true
     clearInterval(gInterval)
     document.querySelector('.min').innerText = '00'
     document.querySelector('.sec').innerText = '00'
@@ -295,22 +300,55 @@ function restart() {
 
 
 function giveHint(elHint) {
-    isHint = true
+    gGame.isHint = true
     elHint.style.backgroundColor = 'antiquewhite'
 }
 
-// showNegs(cellI, cellJ, mat){
-//     for (var i = cellI - 1; i <= cellI + 1; i++) {
-//         if (i < 0 || i >= mat.length) continue
-//         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
-//             if (i === cellI && j === cellJ) continue
-//             if (j < 0 || j >= mat[i].length) continue
-//             if (!mat[i][j].isShown) {
-//                 var elNegCell = document.querySelector(`.cell-${i}-${j}`)
-//                 elNegCell.classList.add('shown')
-//                 if(mat[i][j].isMine) elNegCell.innerText = gMine
-//             }
-//         }
-//     }
-// }
+function showNegs(cellI, cellJ, mat) {
+    for (var i = cellI - 1; i <= cellI + 1; i++) {
+        if (i < 0 || i >= mat.length) continue
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            if (i === cellI && j === cellJ) continue
+            if (j < 0 || j >= mat[i].length) continue
+            if (!mat[i][j].isShown) {
+                var elNegCell = document.querySelector(`.cell-${i}-${j}`)
+                if (mat[i][j].isMine) elNegCell.innerText = gMine
+                elNegCell.classList.add('negshint')
+                document.querySelector(`.cell-${cellI}-${cellJ}`).classList.add('negshint')
+            }
+        }
+    }
+}
+
+function reversHint(cellI, cellJ, mat) {
+    for (var i = cellI - 1; i <= cellI + 1; i++) {
+        if (i < 0 || i >= mat.length) continue
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            if (i === cellI && j === cellJ) continue
+            if (j < 0 || j >= mat[i].length) continue
+            if (!mat[i][j].isShown) {
+                var elNegCell = document.querySelector(`.cell-${i}-${j}`)
+                if (mat[i][j].isMine) elNegCell.innerText = '.'
+                elNegCell.classList.remove('negshint')
+                document.querySelector(`.cell-${cellI}-${cellJ}`).classList.remove('negshint')
+            }
+        }
+    }
+    var elHint = document.querySelector('.hint')
+    elHint.style.backgroundColor = ' rgb(112, 80, 80)'
+    if (gGame.numOfHints === 3) {
+        elHint.innerText = '💡💡'
+    }
+    if (gGame.numOfHints === 2) {
+        elHint.innerText = '💡'
+    }
+    if (gGame.numOfHints === 1) {
+        elHint.innerText = '❌❌❌'
+        elHint.style.backgroundColor = 'antiquewhite'
+    }
+    gGame.numOfHints--
+    gGame.isHint = false
+}
+
+
 
