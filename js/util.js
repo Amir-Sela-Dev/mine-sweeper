@@ -50,3 +50,9 @@ function timer() {
     }
 
 }
+
+function getClassName(location) {
+    const cellClass = 'cell-' + location.i + '-' + location.j
+    return cellClass
+}
+

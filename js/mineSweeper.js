@@ -20,7 +20,8 @@ var gGame = {
     isfirstClick: true,
     numOfSafeClick: 3,
     isSafeClick: true,
-    isManuallyPosMines: false
+    isManuallyPosMines: false,
+    isClearAllMines: false
 }
 
 
@@ -37,8 +38,6 @@ function onInit() {
 
 
 }
-
-console.log('gBoard', gBoard)
 
 
 function createBoard() {
@@ -90,11 +89,23 @@ function renderBoard(board) {
     elBoard.innerHTML = strHTML
 }
 
-
-function getClassName(location) {
-    const cellClass = 'cell-' + location.i + '-' + location.j
-    return cellClass
+function firstClick() {
+    if (!gGame.isClearAllMines) placeMinesOnBoard()
+    setCountOfNegsMines(gBoard)
+    renderBoard(gBoard)
+    gInterval = setInterval(timer, 1000)
+    gGame.isfirstClick = false
+    gGame.isClearAllMines = false
 }
+
+function placeMinesOnBoard() {
+    var boardLocations = getBoardLocations()
+    for (let i = 0; i < gLevel.MINES; i++) {
+        var rndMineLocation = drawNum(boardLocations)
+        gBoard[rndMineLocation.i][rndMineLocation.j].isMine = true
+    }
+}
+
 
 function setCountOfNegsMines(board) {
     for (let i = 0; i < board.length; i++) {
@@ -129,10 +140,10 @@ function cellClicked(elCell, i, j) {
     var clickedCell = gBoard[i][j]
     if (!gGame.isOn) return
     if (gGame.isManuallyPosMines) {
-        console.log('gLevel.MINES', gLevel.MINES)
         clickedCell.isMine = true
         elCell.classList.add('manuallymines')
         gLevel.MINES++
+        gGame.isClearAllMines = true
         return
     }
     if (gGame.isHint) {
@@ -152,60 +163,46 @@ function cellClicked(elCell, i, j) {
     if (gGame.isfirstClick) firstClick()
     gGame.shownCount++
     checkGameOver()
-
-
 }
 
-function firstClick() {
-    placeMinesOnBoard()
-    setCountOfNegsMines(gBoard)
-    renderBoard(gBoard)
-    gInterval = setInterval(timer, 1000)
-    gGame.isfirstClick = false
-}
+
 
 function expandShown(cellI, cellJ, mat) {
     var negsCount = 0
     var cell = mat[cellI][cellJ]
     if (cell.isMine ||
-        cell.minesAroundCount > 0
-        || cell.isShown) return
-
-
+        cell.minesAroundCount > 0) return
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= mat.length) continue
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
             if (i === cellI && j === cellJ) continue
             if (j < 0 || j >= mat[i].length) continue
-            if (!mat[i][j].isMarked) {
+            if (!mat[i][j].isMarked && !mat[i][j].isMine) {
                 if (!gBoard[i][j].isShown) gGame.shownCount++
                 var elNegCell = document.querySelector(`.cell-${i}-${j}`)
                 elNegCell.classList.add('shown')
                 gBoard[i][j].isShown = true
-                //if neighbour is a number set it as shown
-
-                //else recursive
 
 
-                // if (mat[i][j].minesAroundCount === 0 && !mat[i][j].isMine) {
-                //     console.log('hi')
+                ////////////// recursion work, but with bugs... ///////////////
+                // if (!gBoard[i][j].minesAroundCount && !gGame.isfirstClick && !gBoard[i][j].isShown) {
+                //     var elNegCell = document.querySelector(`.cell-${i}-${j}`)
+                //     elNegCell.classList.add('shown')
+                //     gBoard[i][j].isShown = true
                 //     expandShown(i, j, mat)
+                // } else {
+                //     console.log('hi')
+                //     var elNegCell = document.querySelector(`.cell-${i}-${j}`)
+                //     elNegCell.classList.add('shown')
+                //     gBoard[i][j].isShown = true
                 // }
 
 
             }
         }
     }
-
 }
 
-function placeMinesOnBoard() {
-    var boardLocations = getBoardLocations()
-    for (let i = 0; i < gLevel.MINES; i++) {
-        var rndMineLocation = drawNum(boardLocations)
-        gBoard[rndMineLocation.i][rndMineLocation.j].isMine = true
-    }
-}
 
 function cellMarked(elCell, i, j) {
     var cell = gBoard[i][j]
@@ -306,7 +303,7 @@ function restart() {
     gGame.numOfSafeClick = 3
     gGame.numOfHints = 3
     gGame.lives = 3
-    if (gGame.isManuallyPosMines) gLevel.MINES = 1
+    if (gGame.isManuallyPosMines) gLevel.MINES = 0
     var elSafe = document.querySelector('.safe')
     elSafe.innerText = 'safe click: 3'
     elSafe.style.backgroundColor = ' rgb(21, 92, 124)'
@@ -416,7 +413,6 @@ function getSafeLocations() {
             }
         }
     }
-    console.log('emptyBoardLocations', emptyBoardLocations)
     return emptyBoardLocations
 
 }
@@ -440,12 +436,4 @@ function manuallyPosMines(elButton) {
 
 
 
-// function saveMemento() {
-//     mementos.push(value)
-// }
 
-// function undo() {
-//     const lastMemento = mementos.pop()
-
-//     input.value = lastMemento ? lastMemento : input.value
-// }
